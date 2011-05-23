@@ -274,6 +274,8 @@ public class ShellLink implements NativeLibraryClient
     private int userType = CURRENT_USER;
 
     private boolean initializeSucceeded = false;
+    
+    private static boolean wasInitialized = false;
 
     // ------------------------------------------------------------------------
     // Native Methods
@@ -495,6 +497,15 @@ public class ShellLink implements NativeLibraryClient
      */
     private void initialize() throws Exception
     {
+        if (wasInitialized) {
+            try{
+            releaseCOM();
+            }
+            finally {
+            wasInitialized = false;
+            }
+        }
+        
         try
         {
             Librarian.getInstance().loadLibrary("ShellLink", this);
@@ -518,8 +529,8 @@ public class ShellLink implements NativeLibraryClient
         catch (Throwable exception)
         {
             throw (new Exception("unidentified problem initializing COM\n" + exception.toString()));
-        }
-
+        }       
+        
         int successCode = getInterface();
         if (successCode != SL_OK)
         {
@@ -536,6 +547,10 @@ public class ShellLink implements NativeLibraryClient
                 throw (new Exception(
                         "could not get an instance of IShellLink, failed to co-create instance"));
             }
+        }
+        else 
+        {
+            wasInitialized = true;
         }
     }
 
