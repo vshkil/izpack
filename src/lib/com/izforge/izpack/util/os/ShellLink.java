@@ -497,12 +497,15 @@ public class ShellLink implements NativeLibraryClient
      */
     private void initialize() throws Exception
     {
-        if (wasInitialized) {
-            try{
-            releaseCOM();
+        if (wasInitialized == true ) 
+        {
+            try 
+            {
+                releaseCOM();
             }
-            finally {
-            wasInitialized = false;
+            finally 
+            {
+                wasInitialized = false;
             }
         }
         
